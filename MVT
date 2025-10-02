@@ -1,0 +1,58 @@
+1 model.py from django.db import models
+
+# Create your models here.
+class Student(models.Model):
+    name =models.CharField(max_length=100)
+    age =models.IntegerField()
+    email=models.EmailField()
+
+def __str__(self):
+    return self.name    
+
+2 view,py(app,py)
+from django.shortcuts import render
+from .models import Student
+
+
+
+def Student_list(request):
+    students = Student.objects.all()  # ✅ Fix here
+    return render(request, 'student_list.html', {'students': students})
+
+3 myapp.py urls.py
+from django.urls import path
+from .import views
+
+urlpatterns =[
+  path('', views.Student_list, name='student_list'),
+
+]
+
+4 myproject urls.py
+
+from django.contrib import admin
+from django.urls import path
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('myapp.urls')),
+]
+5 templates
+<!DOCTYPE html>
+<html>
+    <head>
+        <body>
+            <h1>Student List</h1>
+            <ul>
+                {% for student in students %}
+                <li>{{ student.name}} -{{ student.age}}- {{ student.email}}</li>
+                {% endfor%}
+            </ul>
+        </body>
+    </head>
+</html>
+
+6 apply this
+ python manage.py makemigrations
+>> python manage.py migrate
