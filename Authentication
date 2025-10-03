@@ -1,0 +1,59 @@
+steps 
+1 apps/view.py
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect("dashboard")
+        else:
+            return render(request, "login.html", {'error': 'invalid credentials'})
+    return render(request, 'login.html')
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
+2 @login_required -- restricts views to logged in users only
+
+@login_required
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
+
+3 apps/urls.py
+  path('myapp/login/', views.user_login, name='login'),
+  path('myapp/logout/', views.user_logout, name='logout'),
+  path('myapp/dashboard/', views.dashboard, name='dashboard'),
+
+4) project/urls.py
+  path('', include('myapp.urls')),
+
+5)apps /templates/login.html
+<!-- templates/login.html -->
+<h2>Login</h2>
+{% if error %}
+<p style="color: red;">{{ error }}</p>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  <label>Username: <input type="text" name="username" /></label><br />
+  <label>Password: <input type="password" name="password" /></label><br />
+  <button type="submit">Login</button>
+</form>
+
+5) dahsborad.html
+<h2> welcom {{ user.username }}</h2>
+<a href="{% url 'logout' %}">logout</a>
+
+6)setting.py
+ROOT_URLCONF = 'mvtproject.urls'
+LOGIN_URL = '/myapp/login/'
+DASHBOARD_URL = 'myapp/dashboard/'
+LOGOUT_URL = 'myapp/logout/'
+
+
+7) create superuser 
+python manage.py createsuperuser
+
