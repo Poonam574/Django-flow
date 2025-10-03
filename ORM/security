@@ -1,0 +1,29 @@
+1What Django ORM does:
+SQL Concept	Django ORM equivalent
+Table	Model class
+Row (record)	Python object (instance)
+Column	Model field
+SELECT query	.objects.all(), .filter()
+INSERT query	.save()
+
+2 use cmd --python manage.py shell
+from myapp.models import Student // myapp is your app name
+Student.objects.create(name="Riya", age=19, email="riya@gmail.com")
+
+ ---------------------------------------------------------
+security
+{% csrf_token %}  Django automatically checks for CSRF tokens in POST requests. If it's missing, the form will fail for security.
+When users are created (via createsuperuser, forms, etc.), passwords are automatically hashed using strong algorithms like PBKDF2 or Argon2.
+user = authenticate(request, username=username, password=password)
+ THIS IMPORT from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+Protect views using @login_required
+{{ user.username }}
+FEATURES-----
+CSRF tokens	✅ Yes (in your form)
+Hashed passwords	✅ Yes (built-in)
+Secure login/logout	✅ Yes (authenticate, login)
+Session protection	✅ Yes (by default)
+@login_required	✅ Yes (on dashboard)
+Template escaping	✅ Yes (automatic)
+ORM queries	✅ Yes (safe by default)
